@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.zhukong_Control">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1032.0" minWidth="10.0" prefWidth="553.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="693.0" minWidth="10.0" prefWidth="333.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="693.0" minWidth="10.0" prefWidth="293.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="239.0" minHeight="0.0" prefHeight="45.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="485.0" minHeight="6.0" prefHeight="190.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="485.0" minHeight="10.0" prefHeight="286.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="124.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+     <TableView fx:id="t1" layoutY="8.0" prefHeight="464.0" prefWidth="763.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
+       <columns>
+         <TableColumn fx:id="t1_checi" prefWidth="50.0" text="车次" />
+         <TableColumn fx:id="t1_kaiche" prefWidth="65.0" text="开车时间" />
+         <TableColumn fx:id="t1_xianshi" prefWidth="71.0" text="显示时间" />
+         <TableColumn fx:id="t1_zhant" prefWidth="45.0" text="站台" />
+           <TableColumn fx:id="t1_houche" prefWidth="45.0" text="候车" />
+         <TableColumn fx:id="t1_dibiao" prefWidth="69.0" text="地标" />
+         <TableColumn fx:id="t1_shunhao" prefWidth="60.0" text="车厢" />
+         <TableColumn fx:id="t1_wandian" prefWidth="154.0" text="晚点时间" />
+
+       </columns>
+     </TableView>
+      <TableView fx:id="t2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <columns>
+          <TableColumn fx:id="t2_checi" prefWidth="99.0" text="车次" />
+          <TableColumn fx:id="t2_zhant" prefWidth="63.0" text="站台" />
+          <TableColumn fx:id="t2_dibiao" prefWidth="73.0" text="地标" />
+          <TableColumn fx:id="t2_wandian" prefWidth="106.0" text="晚点时间" />
+        </columns>
+      </TableView>
+      <TableView fx:id="t3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <columns>
+          <TableColumn fx:id="t3_wandiancheci" prefWidth="110.0" text="车次" />
+          <TableColumn fx:id="t3_wandianzhant" prefWidth="67.0" text="站台" />
+          <TableColumn fx:id="t3_wandianshijian" prefWidth="162.0" text="晚点时间" />
+        </columns>
+      </TableView>
+      <TextArea fx:id="textarea" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.rowIndex="3" />
+      <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <children>
+           <Button fx:id="tijiao" layoutX="196.0" layoutY="20.0" text="下发修改">
+               <font>
+                  <Font size="22.0" />
+               </font></Button>
+            <Button fx:id="jiache" layoutX="2.0" layoutY="20.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="186.0" text="加车(暂未实现)">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Button>
+           <!--<Button fx:id="shuaxin" layoutX="95.0" layoutY="15.0" text="刷新" />-->
+           <!--<Button fx:id="chongzhi" layoutX="40.0" layoutY="15.0" text="重置" />-->
+         </children></Pane>
+      <Label alignment="CENTER" prefHeight="35.0" prefWidth="896.0" text="控制端-车次（上）滚屏（下）" textAlignment="CENTER" textOverrun="CLIP">
+         <font>
+            <Font size="21.0" />
+         </font></Label>
+      <Label alignment="CENTER" prefHeight="35.0" prefWidth="512.0" text="一层大屏显示-正常（上）晚点（下）" GridPane.columnIndex="1">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <TableView fx:id="t4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+          <columns>
+              <TableColumn fx:id="t4_checi" prefWidth="65.0" text="车次" />
+              <TableColumn fx:id="t4_zhant" prefWidth="66.0" text="站台" />
+              <TableColumn fx:id="t4_dibiao" prefWidth="63.0" text="地标" />
+              <TableColumn fx:id="t4_wandian" prefWidth="119.0" text="晚点时间" />
+          </columns>
+      </TableView>
+      <TableView fx:id="t5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+          <columns>
+              <TableColumn fx:id="t5_wandiancheci" prefWidth="70.0" text="车次" />
+              <TableColumn fx:id="t5_wandianzhant" prefWidth="96.0" text="站台" />
+              <TableColumn fx:id="t5_wandianshijian" prefWidth="147.0" text="晚点时间" />
+          </columns>
+      </TableView>
+      <Label alignment="CENTER" prefHeight="40.0" prefWidth="277.0" text="二层大屏显示-正常（上）晚点（下）" GridPane.columnIndex="2">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="base" layoutX="15.0" layoutY="20.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="172.0" text="下发基础文件">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+
+   </children>
+</GridPane>

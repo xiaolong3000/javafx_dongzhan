@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0"
+      fx:controller="controllers.jiache_control" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="21.0" layoutY="15.0" text="车次：" />
+      <TextField fx:id="checi" layoutX="80.0" layoutY="11.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="43.0" text="开车时间：" />
+       <TextField fx:id="kaiche" layoutX="80.0" layoutY="39.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="71.0" text="显示时间：" />
+       <TextField fx:id="xianshi" layoutX="80.0" layoutY="67.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="108.0" text="站台：" />
+       <TextField fx:id="zhant" layoutX="80.0" layoutY="177.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="143.0" text="地标：" />
+       <TextField  fx:id="dibiao" layoutX="80.0" layoutY="139.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="181.0" text="车厢" />
+       <TextField fx:id="shunhao" layoutX="80.0" layoutY="104.0" prefHeight="23.0" prefWidth="100.0" />
+       <Label layoutX="21.0" layoutY="209.0" text="候车：" />
+       <TextField  fx:id="houche" layoutX="80.0" layoutY="205.0" prefHeight="23.0" prefWidth="100.0" />
+      <Button fx:id="button" layoutX="57.0" layoutY="243.0" mnemonicParsing="false" text="提交">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Button>
+
+
+       
+   </children>
+</Pane>

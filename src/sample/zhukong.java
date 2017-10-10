@@ -1,0 +1,45 @@
+package sample;
+
+import javafx.application.Application;
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import test.client;
+import test.server;
+
+import java.util.Timer;
+
+import static javafx.application.Application.launch;
+
+/**
+ * Created by Administrator on 2017/8/6 0006.
+ */
+public class zhukong extends Application {
+    public final static Timer timer_zhukong=new Timer();
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getResource("zhukong.fxml"));
+
+        primaryStage.setTitle("信阳车站");
+        primaryStage.setScene(new Scene(root, 1200, 600));
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+
+                timer_zhukong.cancel();
+
+            }
+        });
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

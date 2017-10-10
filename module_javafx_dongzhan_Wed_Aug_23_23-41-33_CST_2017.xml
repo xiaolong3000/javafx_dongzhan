@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_javafx_dongzhan" default="compile.module.javafx_dongzhan">
+  <dirname property="module.javafx_dongzhan.basedir" file="${ant.file.module_javafx_dongzhan}"/>
+  
+  <property name="module.jdk.home.javafx_dongzhan" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.javafx_dongzhan" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.javafx_dongzhan" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.javafx_dongzhan" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="javafx_dongzhan.output.dir" value="${module.javafx_dongzhan.basedir}/out/production/javafx_dongzhan"/>
+  <property name="javafx_dongzhan.testoutput.dir" value="${module.javafx_dongzhan.basedir}/out/test/javafx_dongzhan"/>
+  
+  <path id="javafx_dongzhan.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="javafx_dongzhan.module.production.classpath">
+    <path refid="${module.jdk.classpath.javafx_dongzhan}"/>
+    <pathelement location="${basedir}/src/netty-common-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-codec-http-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-example-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-transport-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-buffer-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-resolver-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/jacob.jar"/>
+    <pathelement location="${basedir}/src/poi-3.14.jar"/>
+    <pathelement location="${basedir}/src/commons-net-3.6.jar"/>
+  </path>
+  
+  <path id="javafx_dongzhan.runtime.production.module.classpath">
+    <pathelement location="${javafx_dongzhan.output.dir}"/>
+    <pathelement location="${basedir}/src/netty-common-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-codec-http-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-example-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-transport-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-buffer-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-resolver-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/jacob.jar"/>
+    <pathelement location="${basedir}/src/poi-3.14.jar"/>
+    <pathelement location="${basedir}/src/commons-net-3.6.jar"/>
+  </path>
+  
+  <path id="javafx_dongzhan.module.classpath">
+    <path refid="${module.jdk.classpath.javafx_dongzhan}"/>
+    <pathelement location="${javafx_dongzhan.output.dir}"/>
+    <pathelement location="${basedir}/src/netty-common-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-codec-http-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-example-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-transport-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-buffer-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-resolver-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/jacob.jar"/>
+    <pathelement location="${basedir}/src/poi-3.14.jar"/>
+    <pathelement location="${basedir}/src/commons-net-3.6.jar"/>
+  </path>
+  
+  <path id="javafx_dongzhan.runtime.module.classpath">
+    <pathelement location="${javafx_dongzhan.testoutput.dir}"/>
+    <pathelement location="${javafx_dongzhan.output.dir}"/>
+    <pathelement location="${basedir}/src/netty-common-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-codec-http-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-example-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-transport-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-buffer-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/netty-resolver-4.1.13.Final.jar"/>
+    <pathelement location="${basedir}/src/jacob.jar"/>
+    <pathelement location="${basedir}/src/poi-3.14.jar"/>
+    <pathelement location="${basedir}/src/commons-net-3.6.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.javafx_dongzhan">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.javafx_dongzhan">
+    <patternset refid="excluded.from.module.javafx_dongzhan"/>
+  </patternset>
+  
+  <path id="javafx_dongzhan.module.sourcepath">
+    <dirset dir="${module.javafx_dongzhan.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.javafx_dongzhan" depends="compile.module.javafx_dongzhan.production,compile.module.javafx_dongzhan.tests" description="Compile module javafx_dongzhan"/>
+  
+  <target name="compile.module.javafx_dongzhan.production" depends="register.custom.compilers" description="Compile module javafx_dongzhan; production classes">
+    <mkdir dir="${javafx_dongzhan.output.dir}"/>
+    <javac2 destdir="${javafx_dongzhan.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.javafx_dongzhan}/javac">
+      <compilerarg line="${compiler.args.javafx_dongzhan}"/>
+      <bootclasspath refid="javafx_dongzhan.module.bootclasspath"/>
+      <classpath refid="javafx_dongzhan.module.production.classpath"/>
+      <src refid="javafx_dongzhan.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.javafx_dongzhan"/>
+    </javac2>
+    
+    <copy todir="${javafx_dongzhan.output.dir}">
+      <fileset dir="${module.javafx_dongzhan.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.javafx_dongzhan.tests" depends="register.custom.compilers,compile.module.javafx_dongzhan.production" description="compile module javafx_dongzhan; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.javafx_dongzhan" description="cleanup module">
+    <delete dir="${javafx_dongzhan.output.dir}"/>
+    <delete dir="${javafx_dongzhan.testoutput.dir}"/>
+  </target>
+</project>

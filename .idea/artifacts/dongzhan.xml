@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="dongzhan">
+    <output-path>$PROJECT_DIR$/out/artifacts/dongzhan</output-path>
+    <root id="archive" name="dongzhan.jar">
+      <element id="module-output" name="javafx_dongzhan" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/commons-net-3.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/jacob.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-buffer-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-codec-http-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-common-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-example-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-resolver-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-transport-4.1.13.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/poi-3.14.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
