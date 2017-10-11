@@ -1,5 +1,6 @@
 package controllers;
 
+import com.jfoenix.controls.JFXTimePicker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -23,6 +24,9 @@ import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -465,10 +469,31 @@ private TableColumn<zhongkong,String> t1_checi;
             public void handle(ActionEvent event) {
                final Stage stage=new Stage();
                stage.initModality(Modality.WINDOW_MODAL);
-               Group root=new Group();
+               Pane root=new Pane();
+               Label l1=new Label("车次:");
+               TextField t1=new TextField();
+
+                JFXTimePicker blueDatePicker = new JFXTimePicker();
+                blueDatePicker.setDefaultColor(Color.valueOf("#3f51b5"));
+                blueDatePicker.setOverLay(true);
+
+            l1.setLayoutX(0);
+            l1.setLayoutY(0);
+            t1.setLayoutX(150);
+            t1.setLayoutY(0);
+            blueDatePicker.setLayoutX(0);
+            blueDatePicker.setLayoutY(150);
+            root.getChildren().add(l1);
+            root.getChildren().add(t1);
+            root.getChildren().add(blueDatePicker);
 
 
-                Scene scene = new Scene(root, 300, 250, Color.LIGHTGREEN);
+
+
+
+
+
+                Scene scene = new Scene(root, 300, 250);
                 stage.setScene(scene);
                 stage.setTitle("加车");
 
