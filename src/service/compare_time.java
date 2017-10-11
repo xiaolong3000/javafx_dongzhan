@@ -154,6 +154,23 @@ public class compare_time {
 
     }
 
+public static String getrealtime(String time){
 
+        if (time.contains("AM")){
+            time=time.replace("AM","");
+            time=time.trim();
+        }
+
+        if (time.contains("PM")){
+            time=time.replace("PM","");
+            time=time.trim();
+            String[] a=time.split(":");
+            int b=Integer.parseInt(a[0]);
+            b+=12;
+            time=""+b+":"+a[1];
+        }
+
+        return time;
+}
 
 }

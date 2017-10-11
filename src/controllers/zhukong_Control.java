@@ -469,31 +469,87 @@ private TableColumn<zhongkong,String> t1_checi;
             public void handle(ActionEvent event) {
                final Stage stage=new Stage();
                stage.initModality(Modality.WINDOW_MODAL);
-               Pane root=new Pane();
+               StackPane root=new StackPane();
                Label l1=new Label("车次:");
-               TextField t1=new TextField();
+               TextField tf1=new TextField();
+               Label l2=new Label("开车时间");
+               Label l3=new Label("显示时间");
+               Label l4=new Label("站台");
+               Label l5=new Label("车厢");
+               Label l6=new Label("候车");
 
-                JFXTimePicker blueDatePicker = new JFXTimePicker();
+
+
+
+                JFXTimePicker blueDatePicker = new JFXTimePicker();//开车时间
                 blueDatePicker.setDefaultColor(Color.valueOf("#3f51b5"));
                 blueDatePicker.setOverLay(true);
+                blueDatePicker.setIs24HourView(true);
 
-            l1.setLayoutX(0);
-            l1.setLayoutY(0);
-            t1.setLayoutX(150);
-            t1.setLayoutY(0);
-            blueDatePicker.setLayoutX(0);
-            blueDatePicker.setLayoutY(150);
-            root.getChildren().add(l1);
-            root.getChildren().add(t1);
-            root.getChildren().add(blueDatePicker);
+                JFXTimePicker blueDatePicker1 = new JFXTimePicker();//显示时间
+                blueDatePicker1.setDefaultColor(Color.valueOf("#3f51b5"));
+                blueDatePicker1.setOverLay(true);
+                blueDatePicker1.setIs24HourView(true);
+
+                ChoiceBox zhant_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                        "1", "2", "3","4","5")
+                );//站台
+                ChoiceBox houche_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                        "1", "2", "3","4","5")
+                );//候车
+                ChoiceBox shunhao_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                        "1-16", "16-1", "1-8","8-1")
+                );//车厢
+
+                Button button=new Button("提交");
+                button.setPrefWidth(100);
+                button.setPrefWidth(100);
+                GridPane gridPane=new GridPane();
+                gridPane.setHgap(25);
+                gridPane.setVgap(25);
+                gridPane.add(l1,0,0);
+                gridPane.add(tf1,1,0);
+                gridPane.add(l2,0,1);
+                gridPane.add(blueDatePicker,1,1);
+                gridPane.add(l3,0,2);
+                gridPane.add(blueDatePicker1,1,2);
+                gridPane.add(l4,0,3);
+                gridPane.add(zhant_choicebox,1,3);
+                gridPane.add(l5,0,4);
+                gridPane.add(shunhao_choicebox,1,4);
+                gridPane.add(l6,0,5);
+                gridPane.add(houche_choicebox,1,5);
+                gridPane.add(button,0,6);
+
+    button.setOnAction(new EventHandler<ActionEvent>() {
+    @Override
+    public void handle(ActionEvent event) {
+//        System.out.println(t1.getText());
+//        System.out.println(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
+//        System.out.println(blueDatePicker1.getEditor().getText());
+        zhongkong z=new zhongkong();
+        z.setCheci(tf1.getText());
+        z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
+        z.setXianshitime(compare_time.getrealtime(blueDatePicker1.getEditor().getText()));
+        z.setZhant(zhant_choicebox.getValue().toString());
+        z.setHouche(houche_choicebox.getValue().toString());
+        z.setDibiao(shunhao_yanse.change(shunhao_choicebox.getValue().toString()));
+        z.setShunhao(shunhao_choicebox.getValue().toString());
+        t1.getItems().add(z);
+        excel_add(z);
+        stage.close();
+
+
+    }
+});
 
 
 
 
 
 
-
-                Scene scene = new Scene(root, 300, 250);
+                root.getChildren().add(gridPane);
+                Scene scene = new Scene(root, 300, 350);
                 stage.setScene(scene);
                 stage.setTitle("加车");
 
@@ -1022,11 +1078,109 @@ try{
         e.printStackTrace();
     }
 
+    }
+
+
+    private void excel_add(zhongkong c){
+        File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
+
+        String[][] data;
+        if(file_now.exists()){
+            data=new readexcel().result(path_now);
+        }else{
+            data=new readexcel().result(base_file_path);
+            try {
+                file_now.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+
+        try{
+            HSSFWorkbook workbook=new HSSFWorkbook();
+            HSSFSheet sheet=workbook.createSheet("Sheet1");
+            HSSFRow r=sheet.createRow(0);
+            int col=0;
+            HSSFCell c1=r.createCell(col);
+            c1.setCellValue("车次");
+            col++;
+            HSSFCell c2=r.createCell(col);
+            c2.setCellValue("开车时间");
+            col++;
+            HSSFCell c3=r.createCell(col);
+            c3.setCellValue("显示时间");
+            col++;
+            HSSFCell c4=r.createCell(col);
+            c4.setCellValue("站台");
+            col++;
+            HSSFCell c5=r.createCell(col);
+            c5.setCellValue("地标");
+            col++;
+            HSSFCell c8=r.createCell(col);
+            c8.setCellValue("车厢");
+            col++;
+            HSSFCell c6=r.createCell(col);
+            c6.setCellValue("晚点时间");
+            col++;
+            HSSFCell c7=r.createCell(col);
+            c7.setCellValue("权能");
+            col++;
+            col++;
+            HSSFCell c9=r.createCell(col);
+            c9.setCellValue("候车");
+
+
+            for (int j=1;j<data.length+1;j++){
+
+                HSSFRow rr=sheet.createRow(j);
+                for (int k=0;k<data[j-1].length;k++){
+                    HSSFCell cell=rr.createCell(k);
+                    cell.setCellValue(data[j-1][k]);
+                }
+            }
+            HSSFRow rr=sheet.createRow(data.length+1);
+            int colc=0;
+            HSSFCell cc1=rr.createCell(colc);
+            cc1.setCellValue(c.getCheci());
+            colc++;
+            HSSFCell cc2=rr.createCell(colc);
+            cc2.setCellValue(c.getKaichetime());
+            colc++;
+            HSSFCell cc3=rr.createCell(colc);
+            cc3.setCellValue(c.getXianshitime());
+            colc++;
+            HSSFCell cc4=rr.createCell(colc);
+            cc4.setCellValue(" "+c.getZhant());
+            colc++;
+            HSSFCell cc5=rr.createCell(colc);
+            cc5.setCellValue(c.getDibiao());
+            colc++;
+            HSSFCell cc6=rr.createCell(colc);
+            cc6.setCellValue(c.getShunhao());
+            colc++;
+            colc++;
+            HSSFCell cc8=rr.createCell(colc);
+            cc8.setCellValue("e");
+            colc++;
+            colc++;
+            HSSFCell cc7=rr.createCell(colc);
+            cc7.setCellValue(" "+c.getHouche());
 
 
 
 
 
+
+            FileOutputStream out=new FileOutputStream(file_now);
+            workbook.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     private void wExcel(TableView<checi> t2,TableView<checi> t4,String text) throws Exception{//写t2
