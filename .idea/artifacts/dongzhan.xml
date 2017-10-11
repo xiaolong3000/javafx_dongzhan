@@ -12,6 +12,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-resolver-4.1.13.Final.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/src/netty-transport-4.1.13.Final.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/src/poi-3.14.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/jfoenix.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
