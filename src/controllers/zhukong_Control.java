@@ -20,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.T;
 import readfile.readexcel;
 import sample.config;
 import service.*;
@@ -604,8 +605,54 @@ button.setOnAction(event1 -> {
         });
 
          t2.setOnMouseClicked(event -> {
-
+             if (event.getClickCount()==3) {
+                 int index = t2.getSelectionModel().getFocusedIndex();
+                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "确认删除该车次吗？");
+                 confirmation.setHeaderText("删除？");
+                 Optional<ButtonType> result = confirmation.showAndWait();
+                 if (result.isPresent() && result.get() == ButtonType.OK) {
+                     excel_delete(t2.getItems().get(index));
+                     t2.getItems().remove(index);
+                 }
+             }
          });
+         t3.setOnMouseClicked(event -> {
+             if (event.getClickCount()==3) {
+                 int index = t3.getSelectionModel().getFocusedIndex();
+                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "确认删除该车次吗？");
+                 confirmation.setHeaderText("删除？");
+                 Optional<ButtonType> result = confirmation.showAndWait();
+                 if (result.isPresent() && result.get() == ButtonType.OK) {
+                     excel_delete(new checi(t3.getItems().get(index)));
+                     t3.getItems().remove(index);
+                 }
+             }
+         });
+         t4.setOnMouseClicked(event -> {
+             if (event.getClickCount()==3) {
+                 int index = t4.getSelectionModel().getFocusedIndex();
+                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "确认删除该车次吗？");
+                 confirmation.setHeaderText("删除？");
+                 Optional<ButtonType> result = confirmation.showAndWait();
+                 if (result.isPresent() && result.get() == ButtonType.OK) {
+                     excel_delete(t4.getItems().get(index));
+                     t4.getItems().remove(index);
+                 }
+             }
+         });
+         t5.setOnMouseClicked(event -> {
+             if (event.getClickCount()==3) {
+                 int index = t5.getSelectionModel().getFocusedIndex();
+                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "确认删除该车次吗？");
+                 confirmation.setHeaderText("删除？");
+                 Optional<ButtonType> result = confirmation.showAndWait();
+                 if (result.isPresent() && result.get() == ButtonType.OK) {
+                     excel_delete(new checi(t5.getItems().get(index)));
+                     t5.getItems().remove(index);
+                 }
+             }
+         });
+
 
 
 
@@ -1048,5 +1095,6 @@ try{
        tag=0;//读写保护
 
 }
+
 
 }
