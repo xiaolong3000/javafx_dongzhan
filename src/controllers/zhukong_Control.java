@@ -330,9 +330,9 @@ private Button jiache;
 
         tijiao.setOnAction(event -> {
             try {
-              tag=1;//防止读写冲突
+
               wExcel(t2,t4,textarea.getText());
-              tag=0;
+
               SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm");
                 ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
                 for (int i=0;i<config.ips.length;i++) {
@@ -841,6 +841,7 @@ try{
 
     }
     private void excel_add(zhongkong c){
+        tag=1;
         File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
 
         String[][] data;
@@ -938,9 +939,11 @@ try{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        tag=0;
 
     }
     private void wExcel(TableView<checi> t2,TableView<checi> t4,String text) throws Exception{//写t2
+        tag=1;
               File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
 
         String[][] data;
@@ -1023,7 +1026,7 @@ try{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+tag=0;
 
     }
    private void wExcel_small(String checi,int index,String value) throws Exception{
