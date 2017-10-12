@@ -48,12 +48,10 @@ import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Executor;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import static sample.config.*;
 
@@ -82,10 +80,7 @@ private Button tijiao;
 private Button base;
 @FXML
 private Button jiache;
-//@FXML
-//private Button shuaxin;
-//@FXML
-//private Button chongzhi;
+
 @FXML
 private TableColumn<zhongkong,String> id;
 @FXML
@@ -211,31 +206,7 @@ private TableColumn<zhongkong,String> t1_checi;
         t1_zhant.setCellValueFactory(new PropertyValueFactory<>("zhant"));
         t1_houche.setCellValueFactory(new PropertyValueFactory<>("houche"));
 
-//
-//        File file_now=new File(path_now);
-//        String[][] data;
-//        if(file_now.exists()){
-//           data=new readexcel().result(path_now);
-//        }else{
-//             data=new readexcel().result(base_file_path);
-//        }
-//
-//         for(int i=0;i<data.length;i++){
-//             String now=df.format(new Date());
-//             if(compare_time.comparetime(now,data[i][1],data[i][6])<0) {
-//                 zhongkong zhongkong = new zhongkong();
-//                 zhongkong.setCheci(data[i][0]);
-//                // System.out.println(data[i][0]);
-//                 zhongkong.setKaichetime(data[i][1]);
-//                 zhongkong.setXianshitime(data[i][2]);
-//                 zhongkong.setZhant(data[i][3]);
-//                 zhongkong.setDibiao(data[i][4]);
-//                 zhongkong.setShunhao(data[i][5]);
-//                 zhongkong.setWandiantime(data[i][6]);
-//                 zhongkong.setQuanneng(data[i][7]);
-//                 data1.add(zhongkong);
-//             }
-//         }
+
         t1.setItems(data1);
         t2.setItems(data2);
         t3.setItems(data3);
@@ -524,9 +495,7 @@ private TableColumn<zhongkong,String> t1_checi;
     button.setOnAction(new EventHandler<ActionEvent>() {
     @Override
     public void handle(ActionEvent event) {
-//        System.out.println(t1.getText());
-//        System.out.println(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
-//        System.out.println(blueDatePicker1.getEditor().getText());
+
         zhongkong z=new zhongkong();
         z.setCheci(tf1.getText());
         z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
@@ -585,11 +554,7 @@ private TableColumn<zhongkong,String> t1_checi;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                int size=event.getTableView().getItems().size();
-//                for(int j=0;j<size;j++){
-//                    System.out.println(event.getTableView().getItems().get(j));
-//                }
-               // System.out.println(event.getTableView().getItems().get(index));
+
             }
         });
         t3_wandianshijian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<wandian,String>>() {
@@ -604,11 +569,7 @@ private TableColumn<zhongkong,String> t1_checi;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                int size=event.getTableView().getItems().size();
-//                for(int j=0;j<size;j++){
-//                    System.out.println(event.getTableView().getItems().get(j));
-//                }
-                //System.out.println(event.getTableView().getItems().get(index));
+
             }
         });
         t5_wandianshijian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<wandian,String>>() {
@@ -781,7 +742,7 @@ private TableColumn<zhongkong,String> t1_checi;
                         zhongkong.setQuanneng(data[i][7]);
                         zhongkong.setHouche(data[i][9].trim());
 
-                      //  data1.add(zhongkong);
+
                         if (!zhongkong.getHouche().isEmpty()&&Integer.parseInt(zhongkong.getHouche())==1){//1候车厅
                                  if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),0)>=0&&list2.size()<4){
                                      list2.add(new checi(zhongkong));
@@ -839,164 +800,6 @@ private TableColumn<zhongkong,String> t1_checi;
                     data5.addAll(list5);
                 }
 
-
-
-
-//                for(int k=0;k<t2.getItems().size();k++){//删除t2中已经到时间的数据
-//                    if(t2.getItems().size()>0&&!t2.getItems().get(k).getchechi().equals("")) {
-//                        if (compare_time.comparetime(now, t2.getItems().get(k).getKaicheshijian(),t2.getItems().get(k).getWandianshijian()) >= 0) {
-//                            t2.getItems().remove(k);
-//                            k=0;
-//                        }
-//                    }
-//
-//                    if (t2.getItems().size()==0){//添加一个空的
-//                        t2.getItems().add(new checi());
-//                    }
-//                }
-//
-//                for(int g=0;g<t3.getItems().size();g++){//t3中的数据处理，删除到时间的，移动要显示的
-//                    if(t3.getItems().size()>0) {
-//                        if (compare_time.comparetime(now, t3.getItems().get(g).getKaicheshijian(), t3.getItems().get(g).getWandianshijian()) >= 0) {
-//                            t3.getItems().remove(g);
-//                            g=0;
-//
-//                        }
-//                        if (compare_time.comparetime(now, t3.getItems().get(g).getXianshishijian(), t3.getItems().get(g).getWandianshijian()) >= 0) {
-//                            if (t2.getItems().get(0).getchechi().equals("")){
-//                                      t2.getItems().remove(0);
-//                            }
-//                            if (t2.getItems().size() < 4) {
-//                                wandian w = t3.getItems().remove(g);
-//                                t2.getItems().add(new checi(w));
-//                                g=0;
-//                            }
-//                        }
-//                    }
-//                }
-//
-//
-//                for(int k=0;k<t4.getItems().size();k++){//删除t4中已经到时间的数据
-//                    if(t4.getItems().size()>0&&!t4.getItems().get(k).getchechi().equals("")) {
-//                        if (compare_time.comparetime(now, t4.getItems().get(k).getKaicheshijian(),t4.getItems().get(k).getWandianshijian()) >= 0) {
-//                            t4.getItems().remove(k);
-//                            k=0;
-//                        }
-//                    }
-//                    if (t4.getItems().size()==0){//添加一个空的
-//                        t4.getItems().add(new checi());
-//                    }
-//                }
-//
-//                for(int g=0;g<t5.getItems().size();g++){//t5中的数据处理，删除到时间的，移动要显示的
-//                    if(t5.getItems().size()>0) {
-//                        if (compare_time.comparetime(now, t5.getItems().get(g).getKaicheshijian(), t5.getItems().get(g).getWandianshijian()) >= 0) {
-//                            t5.getItems().remove(g);
-//                            g=0;
-//
-//                        }
-//                        if (compare_time.comparetime(now, t5.getItems().get(g).getXianshishijian(), t5.getItems().get(g).getWandianshijian()) >= 0) {
-//                            if (t4.getItems().get(0).getchechi().equals("")){
-//                                t4.getItems().remove(0);
-//                            }
-//                            if (t4.getItems().size() < 4) {
-//                                wandian w = t5.getItems().remove(g);
-//                                t4.getItems().add(new checi(w));
-//                                g=0;
-//                            }
-//
-//
-//                        }
-//                    }
-//                }
-//
-//
-//
-//                for(int i=0;i<t1.getItems().size();i++){//处理t1
-//                    if (t1.getItems().get(i).getZhant().trim().equals("1")) {
-//                        if (compare_time.comparetime(now, t1.getItems().get(i).getXianshitime(), t1.getItems().get(i).getWandiantime()) >= 0) {
-//                            if (t2.getItems().get(0).getchechi().equals("")) {
-//                                t2.getItems().remove(0);
-//                            }
-//                            if (t2.getItems().size() < 4) {
-//                                zhongkong zhongkong = t1.getItems().remove(i);
-//                                t2.getItems().add(new checi(zhongkong));
-//                                if (i > 0) {
-//                                    i = -1;//因为for循环后会直接更新i
-//                                    continue;
-//                                }
-//                            }
-//                        }
-//                        if (!t1.getItems().get(i).getWandiantime().equals("")) {
-//                            zhongkong zhongkong = t1.getItems().remove(i);
-//                            t3.getItems().add(new wandian(zhongkong));
-//                            if (i > 0) {
-//                                i = -1;//因为for循环后会直接更新i
-//                                continue;
-//                            }
-//                        }
-//
-//                    }//处理一站台
-//
-//
-//                    if (Integer.parseInt(t1.getItems().get(i).getZhant().trim())>1) {//二三四站台
-//                        if (compare_time.comparetime(now, t1.getItems().get(i).getXianshitime(), t1.getItems().get(i).getWandiantime()) >= 0) {
-//                            if (t4.getItems().get(0).getchechi().equals("")) {
-//                                t4.getItems().remove(0);
-//                            }
-//                            if (t4.getItems().size() < 4) {
-//                                zhongkong zhongkong = t1.getItems().remove(i);
-//                                t4.getItems().add(new checi(zhongkong));
-//                                if (i > 0) {
-//                                    i = -1;//因为for循环后会直接更新i
-//                                    continue;
-//                                }
-//                            }
-//
-//
-//                        }
-//                        if (!t1.getItems().get(i).getWandiantime().equals("")) {
-//                            zhongkong zhongkong = t1.getItems().remove(i);
-//                            t5.getItems().add(new wandian(zhongkong));
-//                            if (i > 0) {
-//                                i = -1;//因为for循环后会直接更新i
-//                                continue;
-//                            }
-//                        }
-//
-//                    }//处理二三四站台
-//                }
-//                for(int i=0;i<t1.getItems().size();i++){//处理t1,再次循环一遍
-//                     if (t1.getItems().get(i).getZhant().trim().equals("1")) {
-//                         if (compare_time.comparetime(now, t1.getItems().get(i).getXianshitime(), t1.getItems().get(i).getWandiantime()) >= 0) {
-//                             if (t2.getItems().get(0).getchechi().equals("")) {
-//                                 t2.getItems().remove(0);
-//                             }
-//                             if (t2.getItems().size() < 4) {
-//                                 zhongkong zhongkong = t1.getItems().remove(i);
-//                                 t2.getItems().add(new checi(zhongkong));
-//                             }
-//                         }
-//                         if (!t1.getItems().get(i).getWandiantime().equals("")) {
-//                             zhongkong zhongkong = t1.getItems().remove(i);
-//                             t3.getItems().add(new wandian(zhongkong));
-//                         }
-//                     }else{
-//                         if (compare_time.comparetime(now, t1.getItems().get(i).getXianshitime(), t1.getItems().get(i).getWandiantime()) >= 0) {
-//                             if (t4.getItems().get(0).getchechi().equals("")) {
-//                                 t4.getItems().remove(0);
-//                             }
-//                             if (t4.getItems().size() < 4) {
-//                                 zhongkong zhongkong = t1.getItems().remove(i);
-//                                 t4.getItems().add(new checi(zhongkong));
-//                             }
-//                         }
-//                         if (!t1.getItems().get(i).getWandiantime().equals("")) {
-//                             zhongkong zhongkong = t1.getItems().remove(i);
-//                             t5.getItems().add(new wandian(zhongkong));
-//                         }
-//                     }
-//                }//第二次循环
             }
         },0,60*1000);
     }
@@ -1079,8 +882,6 @@ try{
     }
 
     }
-
-
     private void excel_add(zhongkong c){
         File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
 
@@ -1300,7 +1101,6 @@ try{
 
 
     }
-
    private void wExcel_small(String checi,int index,String value) throws Exception{
         tag=1;
        File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
