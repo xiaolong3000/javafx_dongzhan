@@ -75,25 +75,18 @@ public class Controller implements Initializable{
     );
     @FXML
     private GridPane gridpane;
-
-    public  TableView<checi> tableview;
+    @FXML
+    private   TableView<checi> tableview;
     @FXML
     private TableColumn<checi,String> checi;
     @FXML
     private TableColumn<checi,String> zhant;
-  //  @FXML
-  //  private TableColumn<checi,String> shunhao;
     @FXML
     private  VBox vbox;
     @FXML
     private TableColumn<checi,String> dibiao;
-
-
-
-
-
-
-    public TableView<wandian> tableview1;
+    @FXML
+    private TableView<wandian> tableview1;
     @FXML
     private TableColumn<wandian,String> wandiancheci;
     @FXML
