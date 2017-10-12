@@ -467,7 +467,8 @@ button.setOnAction(event1 -> {
 
 
         });
-
+        jiache.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> jiache.setEffect(colorAdjust_green));
+        jiache.addEventHandler(MouseEvent.MOUSE_EXITED,event -> jiache.setEffect(null));
 
 
 
@@ -519,7 +520,7 @@ button.setOnAction(event1 -> {
             }
 
         });
-       t2_wandian.setOnEditCommit(event -> {
+        t2_wandian.setOnEditCommit(event -> {
            int index=t2.getSelectionModel().getFocusedIndex();
            checi w=event.getTableView().getItems().get(index);
            w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
@@ -589,7 +590,7 @@ button.setOnAction(event1 -> {
         });
 
         //删除车次
-        t1.setOnMouseClicked(event -> {
+         t1.setOnMouseClicked(event -> {
             if(event.getClickCount()==3){
                 int index=t1.getSelectionModel().getFocusedIndex();
                 Alert confirmation=new Alert(Alert.AlertType.CONFIRMATION,"确认删除该车次吗？");
@@ -603,7 +604,6 @@ button.setOnAction(event1 -> {
 
             }
         });
-
          t2.setOnMouseClicked(event -> {
              if (event.getClickCount()==3) {
                  int index = t2.getSelectionModel().getFocusedIndex();
@@ -664,7 +664,6 @@ button.setOnAction(event1 -> {
         List<wandian> list5=new ArrayList<>();
 
         timer_zhukong.schedule(new TimerTask() {
-
             @Override
             public void run() {//自动运行的方法，t2，t3
                 if (tag>0){
@@ -689,7 +688,6 @@ button.setOnAction(event1 -> {
                 }
 
                 for (String[] aData : data) {
-
                     if (compare_time.comparetime(now, aData[1], aData[6], config.tingjian_time) < 0) {
                         zhongkong zhongkong = new zhongkong();
                         zhongkong.setCheci(aData[0]);
@@ -701,8 +699,6 @@ button.setOnAction(event1 -> {
                         zhongkong.setWandiantime(aData[6]);
                         zhongkong.setQuanneng(aData[7]);
                         zhongkong.setHouche(aData[9].trim());
-
-
                         if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) == 1) {//1候车厅
                             if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 0) >= 0 && list2.size() < 4) {
                                 list2.add(new checi(zhongkong));
@@ -722,16 +718,11 @@ button.setOnAction(event1 -> {
                                 continue;
                             }
                         }
-
                         list1.add(zhongkong);
-
                     }
                 }
                 if (!textarea.getText().equals(data[0][8]))
                          textarea.setText(data[0][8]);
-
-
-
                 if (list2.size()==0){
                     list2.add(new checi());
                 }
@@ -759,13 +750,13 @@ button.setOnAction(event1 -> {
                     data5.clear();
                     data5.addAll(list5);
                 }
-
             }
         },0,60*1000);
     }
 
     private final String theQuannneng[]={"a","b","c","d"};
     private void excel_delete(checi c){
+        tag=1;
         File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
 
         String[][] data;
@@ -838,7 +829,7 @@ try{
     } catch (IOException e) {
         e.printStackTrace();
     }
-
+tag=0;
     }
     private void excel_add(zhongkong c){
         tag=1;
