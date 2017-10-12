@@ -3,66 +3,46 @@ package controllers;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Lighting;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.util.Duration;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import readfile.readexcel;
 import sample.config;
 import service.*;
 import test.client;
 
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 import static sample.config.*;
-
 import static sample.zhukong.timer_zhukong;
 
 /**
  * Created by Administrator on 2017/8/9 0009.
  */
 public class zhukong_Control implements Initializable{
-    @FXML
-    private BorderPane pane;
+
 @FXML
 private TableView<zhongkong> t1;
 @FXML
@@ -81,10 +61,9 @@ private Button base;
 @FXML
 private Button jiache;
 
-@FXML
-private TableColumn<zhongkong,String> id;
-@FXML
-private TableColumn<zhongkong,String> t1_checi;
+
+    @FXML
+    private TableColumn<zhongkong,String> t1_checi;
     @FXML
     private TableColumn<zhongkong,String> t1_kaiche;
     @FXML
@@ -159,9 +138,9 @@ private TableColumn<zhongkong,String> t1_checi;
     private  String path_now=base_path+"\\"+df_year.format(new Date())+".xls";
 
 
-     ColorAdjust colorAdjust_red=new ColorAdjust();
-    ColorAdjust colorAdjust_yellow=new ColorAdjust();
-    ColorAdjust colorAdjust_green=new ColorAdjust();
+    private ColorAdjust colorAdjust_red=new ColorAdjust();
+   private ColorAdjust colorAdjust_yellow=new ColorAdjust();
+  private   ColorAdjust colorAdjust_green=new ColorAdjust();
     @Override
     @SuppressWarnings("unchecked")
     public void initialize(URL location, ResourceBundle resources) {
@@ -232,14 +211,14 @@ private TableColumn<zhongkong,String> t1_checi;
               row.setOnDragOver(event -> {
                   Dragboard db = event.getDragboard();
                   if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                      if (row.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                      if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
                           event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                           event.consume();
                       }
                   }
               });
 //
-//              row.setOnDragDropped(event -> {
+//              row.setOnDragDropped(event -> {//保留，这是拖拽后最后一步的处理文件
 //                  Dragboard db = event.getDragboard();
 //                  if (db.hasContent(SERIALIZED_MIME_TYPE)) {
 //                      int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
@@ -348,168 +327,129 @@ private TableColumn<zhongkong,String> t1_checi;
 
 
 
-        tijiao.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        tijiao.setOnAction(event -> {
+            try {
+              tag=1;//防止读写冲突
+              wExcel(t2,t4,textarea.getText());
+              tag=0;
+              SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm");
+                ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
+                for (int i=0;i<config.ips.length;i++) {
+                    final int index=i;
+                    executorService.execute(() -> {
+                        client client = new client(config.ips[index], 12306);
+                        try {
+                            client.start("aaaaaaa#" + simpleDateFormat.format(new Date()));//防止传输过程中丢失
 
-
-                try {
-                  tag=1;//防止读写冲突
-                  wExcel(t2,t4,textarea.getText());
-                  tag=0;
-                  SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm");
-                    ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
-                    for (int i=0;i<config.ips.length;i++) {
-                        final int index=i;
-                        executorService.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                test.client client = new client(config.ips[index], 12306);
-                                try {
-                                    client.start("aaaaaaa#" + simpleDateFormat.format(new Date()));//防止传输过程中丢失
-                                //    System.out.println(index);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                    executorService.shutdown();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
+                executorService.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
-        tijiao.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-               tijiao.setEffect(colorAdjust_red);
-            }
-        });
-        tijiao.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-               tijiao.setEffect(null);
-            }
-        });
+        tijiao.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> tijiao.setEffect(colorAdjust_red));
+        tijiao.addEventHandler(MouseEvent.MOUSE_EXITED, event -> tijiao.setEffect(null));
 
 
 
-        base.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
-                    for (int i=0;i<config.ips.length;i++) {
-                        final int index=i;
-                        executorService.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                test.client client = new client(config.ips[index], 12306);
-                                try {
-                                    client.start("bbbbbbbbbbbbbbbbbbbbb");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+        base.setOnAction(event -> {
+            try {
+                ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
+                for (int i=0;i<config.ips.length;i++) {
+                    final int index=i;
+                    executorService.execute(() -> {
+                        client client = new client(config.ips[index], 12306);
+                        try {
+                            client.start("bbbbbbbbbbbbbbbbbbbbb");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
 
-                    }
-                    executorService.shutdown();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                executorService.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
-        base.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                base.setEffect(colorAdjust_yellow);
-            }
-        });
-        base.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                base.setEffect(null);
-            }
-        });
+        base.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> base.setEffect(colorAdjust_yellow));
+        base.addEventHandler(MouseEvent.MOUSE_EXITED, event -> base.setEffect(null));
 
 
-        jiache.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-               final Stage stage=new Stage();
-               stage.initModality(Modality.WINDOW_MODAL);
-               StackPane root=new StackPane();
-               Label l1=new Label("车次:");
-               TextField tf1=new TextField();
-               Label l2=new Label("开车时间");
-               Label l3=new Label("显示时间");
-               Label l4=new Label("站台");
-               Label l5=new Label("车厢");
-               Label l6=new Label("候车");
+        jiache.setOnAction(event -> {
+           final Stage stage=new Stage();
+           stage.initModality(Modality.WINDOW_MODAL);
+           StackPane root=new StackPane();
+           Label l1=new Label("车次:");
+           TextField tf1=new TextField();
+           Label l2=new Label("开车时间");
+           Label l3=new Label("显示时间");
+           Label l4=new Label("站台");
+           Label l5=new Label("车厢");
+           Label l6=new Label("候车");
 
 
 
 
-                JFXTimePicker blueDatePicker = new JFXTimePicker();//开车时间
-                blueDatePicker.setDefaultColor(Color.valueOf("#3f51b5"));
-                blueDatePicker.setOverLay(true);
-                blueDatePicker.setIs24HourView(true);
+            JFXTimePicker blueDatePicker = new JFXTimePicker();//开车时间
+            blueDatePicker.setDefaultColor(Color.valueOf("#3f51b5"));
+            blueDatePicker.setOverLay(true);
+            blueDatePicker.setIs24HourView(true);
 
-                JFXTimePicker blueDatePicker1 = new JFXTimePicker();//显示时间
-                blueDatePicker1.setDefaultColor(Color.valueOf("#3f51b5"));
-                blueDatePicker1.setOverLay(true);
-                blueDatePicker1.setIs24HourView(true);
+            JFXTimePicker blueDatePicker1 = new JFXTimePicker();//显示时间
+            blueDatePicker1.setDefaultColor(Color.valueOf("#3f51b5"));
+            blueDatePicker1.setOverLay(true);
+            blueDatePicker1.setIs24HourView(true);
 
-                ChoiceBox zhant_choicebox = new ChoiceBox(FXCollections.observableArrayList(
-                        "1", "2", "3","4","5")
-                );//站台
-                ChoiceBox houche_choicebox = new ChoiceBox(FXCollections.observableArrayList(
-                        "1", "2", "3","4","5")
-                );//候车
-                ChoiceBox shunhao_choicebox = new ChoiceBox(FXCollections.observableArrayList(
-                        "1-16", "16-1", "1-8","8-1")
-                );//车厢
+            ChoiceBox zhant_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                    "1", "2", "3","4","5")
+            );//站台
+            ChoiceBox houche_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                    "1", "2", "3","4","5")
+            );//候车
+            ChoiceBox shunhao_choicebox = new ChoiceBox(FXCollections.observableArrayList(
+                    "1-16", "16-1", "1-8","8-1")
+            );//车厢
 
-                Button button=new Button("提交");
-                button.setPrefWidth(100);
-                button.setPrefWidth(100);
-                GridPane gridPane=new GridPane();
-                gridPane.setHgap(25);
-                gridPane.setVgap(25);
-                gridPane.add(l1,0,0);
-                gridPane.add(tf1,1,0);
-                gridPane.add(l2,0,1);
-                gridPane.add(blueDatePicker,1,1);
-                gridPane.add(l3,0,2);
-                gridPane.add(blueDatePicker1,1,2);
-                gridPane.add(l4,0,3);
-                gridPane.add(zhant_choicebox,1,3);
-                gridPane.add(l5,0,4);
-                gridPane.add(shunhao_choicebox,1,4);
-                gridPane.add(l6,0,5);
-                gridPane.add(houche_choicebox,1,5);
-                gridPane.add(button,0,6);
+            Button button=new Button("提交");
+            button.setPrefWidth(100);
+            button.setPrefWidth(100);
+            GridPane gridPane=new GridPane();
+            gridPane.setHgap(25);
+            gridPane.setVgap(25);
+            gridPane.add(l1,0,0);
+            gridPane.add(tf1,1,0);
+            gridPane.add(l2,0,1);
+            gridPane.add(blueDatePicker,1,1);
+            gridPane.add(l3,0,2);
+            gridPane.add(blueDatePicker1,1,2);
+            gridPane.add(l4,0,3);
+            gridPane.add(zhant_choicebox,1,3);
+            gridPane.add(l5,0,4);
+            gridPane.add(shunhao_choicebox,1,4);
+            gridPane.add(l6,0,5);
+            gridPane.add(houche_choicebox,1,5);
+            gridPane.add(button,0,6);
 
-    button.setOnAction(new EventHandler<ActionEvent>() {
-    @Override
-    public void handle(ActionEvent event) {
+button.setOnAction(event1 -> {
 
-        zhongkong z=new zhongkong();
-        z.setCheci(tf1.getText());
-        z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
-        z.setXianshitime(compare_time.getrealtime(blueDatePicker1.getEditor().getText()));
-        z.setZhant(zhant_choicebox.getValue().toString());
-        z.setHouche(houche_choicebox.getValue().toString());
-        z.setDibiao(shunhao_yanse.change(shunhao_choicebox.getValue().toString()));
-        z.setShunhao(shunhao_choicebox.getValue().toString());
-        t1.getItems().add(z);
-        excel_add(z);
-        stage.close();
+    zhongkong z=new zhongkong();
+    z.setCheci(tf1.getText());
+    z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
+    z.setXianshitime(compare_time.getrealtime(blueDatePicker1.getEditor().getText()));
+    z.setZhant(zhant_choicebox.getValue().toString());
+    z.setHouche(houche_choicebox.getValue().toString());
+    z.setDibiao(shunhao_yanse.change(shunhao_choicebox.getValue().toString()));
+    z.setShunhao(shunhao_choicebox.getValue().toString());
+    t1.getItems().add(z);
+    excel_add(z);
+    stage.close();
 
 
-    }
 });
 
 
@@ -517,15 +457,14 @@ private TableColumn<zhongkong,String> t1_checi;
 
 
 
-                root.getChildren().add(gridPane);
-                Scene scene = new Scene(root, 300, 350);
-                stage.setScene(scene);
-                stage.setTitle("加车");
+            root.getChildren().add(gridPane);
+            Scene scene = new Scene(root, 300, 350);
+            stage.setScene(scene);
+            stage.setTitle("加车");
 
-                stage.show();
+            stage.show();
 
 
-            }
         });
 
 
@@ -537,161 +476,135 @@ private TableColumn<zhongkong,String> t1_checi;
        t5.setEditable(true);
        t2.setEditable(true);
        t4.setEditable(true);
-        t3_wandianshijian.setCellFactory(TextFieldTableCell.<wandian>forTableColumn());
-        t5_wandianshijian.setCellFactory(TextFieldTableCell.<wandian>forTableColumn());
-        t2_wandian.setCellFactory(TextFieldTableCell.<checi>forTableColumn());
-        t4_wandian.setCellFactory(TextFieldTableCell.<checi>forTableColumn());
-        t1_wandian.setCellFactory(TextFieldTableCell.<zhongkong>forTableColumn());
-        t1_wandian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<zhongkong,String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent event) {
-                int index=t1.getSelectionModel().getFocusedIndex();
-                zhongkong w= (zhongkong) event.getTableView().getItems().get(index);
-                w.setWandiantime(new wandian_zhuanhuan().change((String) event.getNewValue()));
-                event.getTableView().getItems().set(index,w);
-                try {
-                    wExcel_small(w.getCheci(),6,new wandian_zhuanhuan().change((String) event.getNewValue()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+        t3_wandianshijian.setCellFactory(TextFieldTableCell.forTableColumn());
+        t5_wandianshijian.setCellFactory(TextFieldTableCell.forTableColumn());
+        t2_wandian.setCellFactory(TextFieldTableCell.forTableColumn());
+        t4_wandian.setCellFactory(TextFieldTableCell.forTableColumn());
+        t1_wandian.setCellFactory(TextFieldTableCell.forTableColumn());
+        t1_wandian.setOnEditCommit(event -> {
+            int index=t1.getSelectionModel().getFocusedIndex();
+            zhongkong w=  event.getTableView().getItems().get(index);
+            w.setWandiantime(new wandian_zhuanhuan().change( event.getNewValue()));
+            event.getTableView().getItems().set(index,w);
+            try {
+                wExcel_small(w.getCheci(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
-        t3_wandianshijian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<wandian,String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent event) {
-                int index=t3.getSelectionModel().getFocusedIndex();
-                wandian w= (wandian) event.getTableView().getItems().get(index);
-                w.setWandianshijian(new wandian_zhuanhuan().change((String) event.getNewValue()));
-                event.getTableView().getItems().set(index,w);
-                try {
-                    wExcel_small(w.getWandiancheci(),6,new wandian_zhuanhuan().change((String) event.getNewValue()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-            }
         });
-        t5_wandianshijian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<wandian,String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent event) {
-                int index=t5.getSelectionModel().getFocusedIndex();
-                wandian w= (wandian) event.getTableView().getItems().get(index);
+        t3_wandianshijian.setOnEditCommit(event -> {
+            int index=t3.getSelectionModel().getFocusedIndex();
+            wandian w=  event.getTableView().getItems().get(index);
+            w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
+            event.getTableView().getItems().set(index,w);
+            try {
+                wExcel_small(w.getWandiancheci(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                w.setWandianshijian(new wandian_zhuanhuan().change((String) event.getNewValue()));
-                event.getTableView().getItems().set(index,w);
-                try {
-                    wExcel_small(w.getWandiancheci(),6,new wandian_zhuanhuan().change((String) event.getNewValue()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                int size=event.getTableView().getItems().size();
-//                for(int j=0;j<size;j++){
-//                    System.out.println(event.getTableView().getItems().get(j));
-//                }
-                //System.out.println(event.getTableView().getItems().get(index));
-            }
         });
-       t2_wandian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<checi, String>>() {
-           @Override
-           public void handle(TableColumn.CellEditEvent<checi, String> event) {
-               int index=t2.getSelectionModel().getFocusedIndex();
-               checi w=(checi)event.getTableView().getItems().get(index);
-               w.setWandianshijian(new wandian_zhuanhuan().change((String) event.getNewValue()));
-               event.getTableView().getItems().set(index,w);
-               try {
-                   wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change((String) event.getNewValue()));
-                   t2.getItems().remove(index);
-                   t3.getItems().add(new wandian(w));
-               } catch (Exception e) {
-                   e.printStackTrace();
-               }
+        t5_wandianshijian.setOnEditCommit(event -> {
+            int index=t5.getSelectionModel().getFocusedIndex();
+            wandian w=  event.getTableView().getItems().get(index);
+
+            w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
+            event.getTableView().getItems().set(index,w);
+            try {
+                wExcel_small(w.getWandiancheci(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+       t2_wandian.setOnEditCommit(event -> {
+           int index=t2.getSelectionModel().getFocusedIndex();
+           checi w=event.getTableView().getItems().get(index);
+           w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
+           event.getTableView().getItems().set(index,w);
+           try {
+               wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+               t2.getItems().remove(index);
+               t3.getItems().add(new wandian(w));
+           } catch (Exception e) {
+               e.printStackTrace();
            }
        });
-        t4_wandian.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<checi, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<checi, String> event) {
-                int index=t4.getSelectionModel().getFocusedIndex();
-                checi w=(checi)event.getTableView().getItems().get(index);
-                w.setWandianshijian(new wandian_zhuanhuan().change((String) event.getNewValue()));
-                event.getTableView().getItems().set(index,w);
-                try {
-                    wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change((String) event.getNewValue()));
-                    t4.getItems().remove(index);
-                    t5.getItems().add(new wandian(w));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        t4_wandian.setOnEditCommit(event -> {
+            int index=t4.getSelectionModel().getFocusedIndex();
+            checi w=event.getTableView().getItems().get(index);
+            w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
+            event.getTableView().getItems().set(index,w);
+            try {
+                wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+                t4.getItems().remove(index);
+                t5.getItems().add(new wandian(w));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
 
 
 
-        t1_zhant.setCellFactory(TextFieldTableCell.<zhongkong>forTableColumn());
-        t1_zhant.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<zhongkong, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<zhongkong, String> event) {
-                int index=t1.getSelectionModel().getFocusedIndex();
-                zhongkong z=(zhongkong) event.getTableView().getItems().get(index);
-                z.setZhant(" "+(String)event.getNewValue());
-                try {
-                    wExcel_small(z.getCheci(),3," "+(String)event.getNewValue());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        t1_zhant.setCellFactory(TextFieldTableCell.forTableColumn());
+        t1_zhant.setOnEditCommit(event -> {
+            int index=t1.getSelectionModel().getFocusedIndex();
+            zhongkong z= event.getTableView().getItems().get(index);
+            z.setZhant(" "+event.getNewValue());
+            try {
+                wExcel_small(z.getCheci(),3," "+event.getNewValue());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        t1_houche.setCellFactory(TextFieldTableCell.<zhongkong>forTableColumn());
-        t1_houche.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<zhongkong, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<zhongkong, String> event) {
-                int index=t1.getSelectionModel().getFocusedIndex();
-                zhongkong z=(zhongkong) event.getTableView().getItems().get(index);
-                z.setHouche((String)event.getNewValue());
-                try {
-                    wExcel_small(z.getCheci(),9," "+(String)event.getNewValue());
+        t1_houche.setCellFactory(TextFieldTableCell.forTableColumn());
+        t1_houche.setOnEditCommit(event -> {
+            int index=t1.getSelectionModel().getFocusedIndex();
+            zhongkong z= event.getTableView().getItems().get(index);
+            z.setHouche(event.getNewValue());
+            try {
+                wExcel_small(z.getCheci(),9," "+event.getNewValue());
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
 
         t1_shunhao.setCellFactory(TextFieldTableCell.<zhongkong>forTableColumn());
-        t1_shunhao.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<zhongkong, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<zhongkong, String> event) {
-                int index=t1.getSelectionModel().getFocusedIndex();
-                zhongkong z=(zhongkong) event.getTableView().getItems().get(index);
-               z.setShunhao(event.getNewValue());
-               z.setDibiao(shunhao_yanse.change(event.getNewValue()));
-                try {
-                    wExcel_small(z.getCheci(),5,event.getNewValue());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        t1_shunhao.setOnEditCommit(event -> {
+            int index=t1.getSelectionModel().getFocusedIndex();
+            zhongkong z= event.getTableView().getItems().get(index);
+           z.setShunhao(event.getNewValue());
+           z.setDibiao(shunhao_yanse.change(event.getNewValue()));
+            try {
+                wExcel_small(z.getCheci(),5,event.getNewValue());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-         t1.setOnMouseClicked(new EventHandler<MouseEvent>() {//删除车次
-             @Override
-             public void handle(MouseEvent event) {
-                 if(event.getClickCount()==3){
-                     int index=t1.getSelectionModel().getFocusedIndex();
-                     Alert confirmation=new Alert(Alert.AlertType.CONFIRMATION,"确认删除该车次吗？");
-                   confirmation.setHeaderText("删除？");
-                     Optional<ButtonType> result=confirmation.showAndWait();
-                     if (result.isPresent()&&result.get()==ButtonType.OK){
-                         excel_delete(new checi(t1.getItems().get(index)));
-                         t1.getItems().remove(index);
+        //删除车次
+        t1.setOnMouseClicked(event -> {
+            if(event.getClickCount()==3){
+                int index=t1.getSelectionModel().getFocusedIndex();
+                Alert confirmation=new Alert(Alert.AlertType.CONFIRMATION,"确认删除该车次吗？");
+                confirmation.setHeaderText("删除？");
+                Optional<ButtonType> result=confirmation.showAndWait();
+                if (result.isPresent()&&result.get()==ButtonType.OK){
+                    excel_delete(new checi(t1.getItems().get(index)));
+                    t1.getItems().remove(index);
 
-                     }
+                }
 
-                 }
-             }
+            }
+        });
+
+         t2.setOnMouseClicked(event -> {
+
          });
 
 
@@ -728,38 +641,38 @@ private TableColumn<zhongkong,String> t1_checi;
                     data=new readexcel().result(base_file_path);
                 }
 
-                for(int i=0;i<data.length;i++){
+                for (String[] aData : data) {
 
-                    if(compare_time.comparetime(now,data[i][1],data[i][6],config.tingjian_time)<0) {
+                    if (compare_time.comparetime(now, aData[1], aData[6], config.tingjian_time) < 0) {
                         zhongkong zhongkong = new zhongkong();
-                        zhongkong.setCheci(data[i][0]);
-                        zhongkong.setKaichetime(data[i][1]);
-                        zhongkong.setXianshitime(data[i][2]);
-                        zhongkong.setZhant(data[i][3]);
-                        zhongkong.setDibiao(data[i][4]);
-                        zhongkong.setShunhao(data[i][5]);
-                        zhongkong.setWandiantime(data[i][6]);
-                        zhongkong.setQuanneng(data[i][7]);
-                        zhongkong.setHouche(data[i][9].trim());
+                        zhongkong.setCheci(aData[0]);
+                        zhongkong.setKaichetime(aData[1]);
+                        zhongkong.setXianshitime(aData[2]);
+                        zhongkong.setZhant(aData[3]);
+                        zhongkong.setDibiao(aData[4]);
+                        zhongkong.setShunhao(aData[5]);
+                        zhongkong.setWandiantime(aData[6]);
+                        zhongkong.setQuanneng(aData[7]);
+                        zhongkong.setHouche(aData[9].trim());
 
 
-                        if (!zhongkong.getHouche().isEmpty()&&Integer.parseInt(zhongkong.getHouche())==1){//1候车厅
-                                 if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),0)>=0&&list2.size()<4){
-                                     list2.add(new checi(zhongkong));
-                                     continue;
-                                 } else if (!zhongkong.getWandiantime().equals("")){
-                                     list3.add(new wandian(zhongkong));
-                                    continue;
-                                 }
+                        if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) == 1) {//1候车厅
+                            if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 0) >= 0 && list2.size() < 4) {
+                                list2.add(new checi(zhongkong));
+                                continue;
+                            } else if (!zhongkong.getWandiantime().equals("")) {
+                                list3.add(new wandian(zhongkong));
+                                continue;
+                            }
                         }
-                        if (!zhongkong.getHouche().isEmpty()&&Integer.parseInt(zhongkong.getHouche())>1){//2候车厅
-                            if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),0)>=0&&list4.size()<4){
+                        if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) > 1) {//2候车厅
+                            if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 0) >= 0 && list4.size() < 4) {
                                 list4.add(new checi(zhongkong));
                                 continue;
 
-                            }else if (!zhongkong.getWandiantime().equals("")){
+                            } else if (!zhongkong.getWandiantime().equals("")) {
                                 list5.add(new wandian(zhongkong));
-                                 continue;
+                                continue;
                             }
                         }
 
@@ -804,7 +717,7 @@ private TableColumn<zhongkong,String> t1_checi;
         },0,60*1000);
     }
 
-    final String theQuannneng[]={"a","b","c","d"};
+    private final String theQuannneng[]={"a","b","c","d"};
     private void excel_delete(checi c){
         File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
 
@@ -875,8 +788,6 @@ try{
         FileOutputStream out=new FileOutputStream(file_now);
         workbook.write(out);
         out.close();
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
     } catch (IOException e) {
         e.printStackTrace();
     }
@@ -977,8 +888,6 @@ try{
             FileOutputStream out=new FileOutputStream(file_now);
             workbook.write(out);
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1000,50 +909,21 @@ try{
                 data[i][7]="e";
             }
 
-//            for (int i=0;i<t1.getItems().size();i++){
-//                       String cc=t1.getItems().get(i).getCheci();
-//                       for (int j=0;j<data.length;j++){
-//                           if (data[j][0].equals(cc)){
-//                               data[j][6]=t1.getItems().get(i).getWandiantime();
-//                               continue;
-//                           }
-//                       }
-//            }//t1的晚点写入，现在不需要了
-//            for (int i=0;i<t3.getItems().size();i++){
-//                String cc=t3.getItems().get(i).getWandiancheci();
-//                for (int j=0;j<data.length;j++){
-//                    if (data[j][0].equals(cc)){
-//                        data[j][6]=t3.getItems().get(i).getWandianshijian();
-//                        continue;
-//                    }
-//                }
-//            }//t3的晚点写入
             for(int i=0;i<t2.getItems().size();i++){
                 String cc=t2.getItems().get(i).getchechi();
                 for(int j=0;j<data.length;j++){
                     if (data[j][0].equals(cc)){
                        data[j][7]=theQuannneng[i];
 
-                        continue;
                     }
                 }
             }
-//            for (int i=0;i<t5.getItems().size();i++){
-//                String cc=t5.getItems().get(i).getWandiancheci();
-//                for (int j=0;j<data.length;j++){
-//                    if (data[j][0].equals(cc)){
-//                        data[j][6]=t5.getItems().get(i).getWandianshijian();
-//                        continue;
-//                    }
-//                }
-//            }//t5的晚点写入
             for(int i=0;i<t4.getItems().size();i++){
                 String cc=t4.getItems().get(i).getchechi();
                 for(int j=0;j<data.length;j++){
                     if (data[j][0].equals(cc)){
                         data[j][7]=theQuannneng[i];
 
-                        continue;
                     }
                 }
             }
@@ -1094,8 +974,6 @@ try{
             workbook.write(out);
             out.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
