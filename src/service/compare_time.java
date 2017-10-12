@@ -170,7 +170,7 @@ public static String getrealtime(String time){
             time=""+b+":"+a[1];
         }
 
-        return time;
+        return time.trim();
 }
 
 }
