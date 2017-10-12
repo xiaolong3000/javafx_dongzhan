@@ -67,7 +67,7 @@
            <!--<Button fx:id="shuaxin" layoutX="95.0" layoutY="15.0" text="刷新" />-->
            <!--<Button fx:id="chongzhi" layoutX="40.0" layoutY="15.0" text="重置" />-->
          </children></Pane>
-      <Label alignment="CENTER" prefHeight="35.0" prefWidth="896.0" text="控制端-车次（上）滚屏（下）" textAlignment="CENTER" textOverrun="CLIP">
+      <Label alignment="CENTER" prefHeight="35.0" prefWidth="896.0" text="控制端" textAlignment="CENTER" textOverrun="CLIP">
          <font>
             <Font size="21.0" />
          </font></Label>
