@@ -49,6 +49,7 @@ import test.jacobdemo;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import test.jacobdemo;
 
@@ -104,6 +105,7 @@ public class Controller implements Initializable{
 
 
 
+
     private  String path_now=base_path+"\\"+df_year.format(new Date())+".xls";
 
 
@@ -114,60 +116,14 @@ public class Controller implements Initializable{
         vbox.setStyle(" -fx-border-color: #09bf0c;");
         tableview.setItems(data);
         tableview1.setItems(data1);
-
         checi.setCellValueFactory(c->new SimpleStringProperty(c.getValue().getchechi()));
         zhant.setCellValueFactory(new PropertyValueFactory<>("zhant"));
-       // shunhao.setCellValueFactory(new PropertyValueFactory<>("shunhao"));
         dibiao.setCellValueFactory(new PropertyValueFactory<>("dibiao"));
         wandiancheci.setCellValueFactory(new PropertyValueFactory<>("wandiancheci"));
         wandianshijian.setCellValueFactory(new PropertyValueFactory<>("wandianshijian"));
         wandianzhant.setCellValueFactory(new PropertyValueFactory<>("wandianzhant"));
-
-
-
-
-
-
-//        tableview.widthProperty().addListener(new ChangeListener<Number>() {
-//
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-////                Pane header = (Pane) tableview.lookup("TableHeaderRow");
-////              // BackgroundFill backgroundFill=new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
-////                if (header != null && header.isVisible()) {
-////                    //header.setMaxHeight(150);
-////                 //   header.setBackground(new Background(backgroundFill));
-////                    header.setVisible(true);
-////                  //  header.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY,Insets.EMPTY)));
-////                    header.setManaged(false);
-////                }
-//
-//            }
-//
-//        });
-//        tableview1.widthProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                Pane header = (Pane) tableview1.lookup("TableHeaderRow");
-//                if (header != null && header.isVisible()) {
-//                    //header.setMaxHeight(100);
-//                    header.setVisible(true);
-//                    header.setManaged(false);
-//                }
-//
-//
-//
-//
-//
-//
-//            }
-//        });
-
-
-
-       tableview.setFixedCellSize(35.0);
-       tableview1.setFixedCellSize(29.0);
-
+        tableview.setFixedCellSize(35.0);
+        tableview1.setFixedCellSize(29.0);
         tableview.setRowFactory(new Callback<TableView<service.checi>, TableRow<service.checi>>() {
             TableCell<checi,String> tableCell=new TableCell<service.checi, String>();
 
@@ -193,7 +149,6 @@ public class Controller implements Initializable{
 
             }
         });
-
         tableview1.setRowFactory(new Callback<TableView<wandian>, TableRow<wandian>>() {
             @Override
             public TableRow<wandian> call(TableView<wandian> param) {
@@ -211,11 +166,6 @@ public class Controller implements Initializable{
                 };
             }
         });
-
-
-
-
-
         wandiancheci.setCellFactory(new Callback<TableColumn<wandian,String>, TableCell<wandian,String>>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -246,47 +196,15 @@ public class Controller implements Initializable{
                             this.setTextFill(RED);
                             setFont(Font.font("微软雅黑", FontWeight.BOLD,28));
                             setText(item);
+
                         }
                     }
                 };
             }
-        });
-//        wandianshijian.setCellFactory(new Callback<TableColumn<wandian, String>, TableCell<wandian, String>>() {
-//            @Override
-//            public TableCell<wandian, String> call(TableColumn<wandian, String> param) {
-//                TextFieldTableCell<wandian,String> textFieldTableCell=new TextFieldTableCell<>();
-//               textFieldTableCell.setFont(Font.font("微软雅黑", FontWeight.BOLD,28));
-//               textFieldTableCell.setTextFill(RED);
-//               textFieldTableCell.setBorder(Border.EMPTY);
-//
-//                TranslateTransition tt=new TranslateTransition(Duration.millis(5000),textFieldTableCell);
-//                tt.setCycleCount(Timeline.INDEFINITE);
-//                tt.setByX(100);
-//                tt.play();
-//             //   textFieldTableCell.prefWidthProperty().bindBidirectional(new SimpleDoubleProperty(tt.currentTimeProperty().get().toMillis()));
-//
-//                return textFieldTableCell;
-//            }
-//        });
 
-//        wandianshijian.setCellFactory(new Callback<TableColumn<wandian, String>, TableCell<wandian, String>>() {
-//            @Override
-//            public TableCell<wandian, String> call(TableColumn<wandian, String> param) {
-//                return new TableCell<wandian,String>(){
-//                    @Override
-//                    protected void updateItem(String item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        this.setBorder(Border.EMPTY);
-//                        if (!isEmpty()) {
-//                            this.setTextFill(RED);
-//                            setBackground(new Background(new BackgroundFill(BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
-//                            setFont(Font.font("微软雅黑", FontWeight.BOLD,28));
-//                            setText(item);
-//                        }
-//                    }
-//                };
-//            }
-//        });
+
+
+        });
         wandianzhant.setCellFactory(new Callback<TableColumn<wandian,String>, TableCell<wandian,String>>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -305,19 +223,12 @@ public class Controller implements Initializable{
                 };
             }
         });
-
-
-
-
-
         dibiao.setCellFactory(new Callback<TableColumn<service.checi, String>, TableCell<service.checi, String>>() {
             @Override
             public TableCell<checi, String> call(TableColumn<checi, String> param) {
                 return new MyTC_checi(param);
             }
         });
-
-
         checi.setCellFactory(new Callback<TableColumn<service.checi, String>, TableCell<service.checi, String>>() {
             @Override
             public TableCell<checi, String> call(TableColumn<checi, String> param) {
@@ -330,112 +241,20 @@ public class Controller implements Initializable{
         });
 
 
-//        shunhao.setCellFactory(new Callback<TableColumn<checi,String>, TableCell<checi,String>>() {
-//            @Override
-//            public TableCell<checi,String> call(TableColumn param) {
-//
-//                return new TableCell<checi,String>(){
-//
-//
-//                    @Override
-//                    protected void updateItem(String item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        this.setBorder(Border.EMPTY);
-//
-//                        if (!isEmpty()) {
-//
-//                            setFont(Font.font("微软雅黑", FontWeight.BOLD, 32));
-//                            String color = param.getTableView().getItems().get(this.getIndex()).toString();
-//                            if (color.contains("红色"))
-//                                this.setTextFill(RED);
-//                            if (color.contains("绿色"))
-//                                this.setTextFill(GREEN);
-//                            if (color.contains("黄色"))
-//                                this.setTextFill(YELLOW);
-//                            if (color.contains("蓝色"))
-//                                this.setTextFill(BLUE);
-//                            setText(item);
-//
-//                        }
-//                    }
-//                };
-//
-//            }
-//        });
-//
-//shunhao.setCellFactory(new Callback<TableColumn<service.checi, String>, TableCell<service.checi, String>>() {
-//    @Override
-//    public TableCell<checi, String> call(TableColumn<checi, String> param) {
-//        TextFieldTableCell<checi,String> text=new TextFieldTableCell<>();
-//        text.setFont(Font.font("微软雅黑", FontWeight.BOLD, 32));
-//        text.setBorder(Border.EMPTY);
-//
-//        text.setTextFill(Color.RED);
-//        text.setWrapText(true);
-//        text.setPrefWidth(300);
-//       // text.setGraphic(new Rectangle(10,40));
-//        TranslateTransition tt=new TranslateTransition(Duration.millis(1000),text);
-//       // tt.setFromX(0);
-//      //  tt.setToX(-300);
-//       tt.setByX(100);
-//
-//        tt.setCycleCount(Timeline.INDEFINITE);
-//        tt.play();
-//
-//        return text;
-//    }
-//});
 
 
 
-
-
-
+   SimpleDateFormat df=new SimpleDateFormat("ss");
 
     timerTask=new TimerTask() {
         @Override
         public void run() {
+          //  System.out.println(df.format(new Date()));
+          if (df.format(new Date()).equals("00"))
            show_tableview();
         }
     };
-    timer_xianshi.schedule(timerTask,0,60*1000);
-
-
-//     timer_wandian.schedule(new TimerTask() {
-//         int i=0;
-//         @Override
-//         public void run() {
-//
-//                 if (i < tableview1.getItems().size()) {
-//                     tableview1.scrollTo(i);
-//                     i++;
-//                 } else {
-//                     i = 0;
-//                     System.out.println(new Date());
-//                 }
-//
-//         }
-//     },0,4*1000);
-//
-//      scheduledService=new ScheduledService<Integer>() {
-//          int i=0;
-//          @Override
-//          protected Task<Integer> createTask() {
-//              return new Task<Integer>() {
-//                  @Override
-//                  protected Integer call() throws Exception {
-//                      if (i < data1.size()) {
-//                          tableview1.scrollTo(i);
-//                          i++;
-//                      } else {
-//                          i = 0;
-//                          System.out.println(new Date());
-//                      }
-//                      return null;
-//                  }
-//              };
-//          }
-//      };
+    timer_xianshi.schedule(timerTask,0,1000);
 
 
 
@@ -460,8 +279,9 @@ private void changeText(Text text,String wenben){
 
 
 voice voice=new voice();
-private void show_tableview() {
+public void show_tableview() {
   List<checi> list_shang=new ArrayList<>();
+  List<checi> test_shang=new ArrayList<>();
   List<wandian> list_xia=new ArrayList<>();
   list_shang.clear();
   list_xia.clear();
@@ -487,14 +307,14 @@ private void show_tableview() {
                 zhongkong.setWandiantime(data_excel[i][6]);
                 zhongkong.setQuanneng(data_excel[i][7]);
 
-
-                if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),0)>=0&&list_shang.size()<4){
+                if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),1)>=0){
+                   test_shang.add(new checi(zhongkong));
+                   if (test_shang.size()>=4){
+                       System.out.println("here   "+new Date()+"  "+test_shang.size()+"  "+zhongkong.getCheci());
+                   }
+                }
+                if (compare_time.comparetime(now,zhongkong.getXianshitime(),zhongkong.getWandiantime(),1)>=0&&list_shang.size()<4){
                    list_shang.add(new checi(zhongkong));
-
-
-//                    if (data.get(0).getchechi().equals("")){
-//                        data.remove(0);
-//                    }
                     continue;
                 }
                 if (!zhongkong.getWandiantime().equals("")){
@@ -502,7 +322,10 @@ private void show_tableview() {
 //                    if (data1.get(0).getWandiancheci().equals("")){
 //                        data1.remove(0);
 //                    }
+
                 }
+
+
 
             }
         }
@@ -529,11 +352,11 @@ private void show_tableview() {
 
     //滚动显示文字
     String wenben=data_excel[0][8];
-    if (!wenben.equals(text.getText()))
-    {
+//    if (!wenben.equals(text.getText()))
+//    {
         changeText(text,wenben);
       //  System.out.println(text);
-    }
+   // }
 
     //下屏滚动
     if (data1.size()>3) {
@@ -612,7 +435,7 @@ private void show_tableview() {
 //    tableview1.setItems(data_xia);
 //
 
-
+  //  System.out.println("here");
 
 }
 
@@ -622,8 +445,9 @@ private void show_tableview() {
     public void changetable(MouseEvent mouseEvent) {
 
         //scheduledService.restart();
-         System.out.println("123");
-
+      //   System.out.println("123");
+         show_tableview();//立即刷新
+        System.out.println("刷新了    "+new Date());
 
 
 

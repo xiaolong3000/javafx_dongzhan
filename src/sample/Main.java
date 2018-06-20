@@ -28,6 +28,7 @@ public class Main extends Application {
     public final static Timer timer_xianshi=new Timer();
   //  public static ScheduledService<Integer> scheduledService=null;
     public final static Timer timer_wandian=new Timer();
+
    // pblic finalu static Thread th_xia=new Thread();
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -58,16 +59,12 @@ public class Main extends Application {
         th.start();
 
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-             //   scheduledService.cancel();
-                timer_xianshi.cancel();
-                timer_wandian.cancel();
-                //th_xia.interrupt();
-                th.interrupt();
-
-            }
+        primaryStage.setOnCloseRequest(event -> {
+         //   scheduledService.cancel();
+            timer_xianshi.cancel();
+            timer_wandian.cancel();
+            //th_xia.interrupt();
+            th.interrupt();
 
         });
         primaryStage.initStyle(StageStyle.UNDECORATED);

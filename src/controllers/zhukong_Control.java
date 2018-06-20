@@ -20,12 +20,10 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.functions.T;
 import readfile.readexcel;
 import sample.config;
 import service.*;
 import test.client;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,7 +35,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static sample.config.*;
+
 import static sample.zhukong.timer_zhukong;
+
 
 /**
  * Created by Administrator on 2017/8/9 0009.
@@ -61,8 +61,10 @@ private Button tijiao;
 private Button base;
 @FXML
 private Button jiache;
-
-
+@FXML
+private Button shuaxin;
+@FXML
+private Button time;
     @FXML
     private TableColumn<zhongkong,String> t1_checi;
     @FXML
@@ -140,10 +142,9 @@ private Button jiache;
 
 
     private ColorAdjust colorAdjust_red=new ColorAdjust();
-   private ColorAdjust colorAdjust_yellow=new ColorAdjust();
-  private   ColorAdjust colorAdjust_green=new ColorAdjust();
+    private ColorAdjust colorAdjust_yellow=new ColorAdjust();
+    private   ColorAdjust colorAdjust_green=new ColorAdjust();
     @Override
-    @SuppressWarnings("unchecked")
     public void initialize(URL location, ResourceBundle resources) {
         colorAdjust_red.setContrast(0.1);
         colorAdjust_red.setHue(-0.05);
@@ -327,13 +328,11 @@ private Button jiache;
         });
 
 
-
+        shuaxin.setOnAction(event -> sche_work());
         tijiao.setOnAction(event -> {
             try {
-
               wExcel(t2,t4,textarea.getText());
-
-              SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm");
+              SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm:ss");
                 ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
                 for (int i=0;i<config.ips.length;i++) {
                     final int index=i;
@@ -376,6 +375,7 @@ private Button jiache;
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         });
         base.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> base.setEffect(colorAdjust_yellow));
         base.addEventHandler(MouseEvent.MOUSE_EXITED, event -> base.setEffect(null));
@@ -439,16 +439,19 @@ private Button jiache;
 button.setOnAction(event1 -> {
 
     zhongkong z=new zhongkong();
-    z.setCheci(tf1.getText());
-    z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
-    z.setXianshitime(compare_time.getrealtime(blueDatePicker1.getEditor().getText()));
-    z.setZhant(zhant_choicebox.getValue().toString());
-    z.setHouche(houche_choicebox.getValue().toString());
-    z.setDibiao(shunhao_yanse.change(shunhao_choicebox.getValue().toString()));
-    z.setShunhao(shunhao_choicebox.getValue().toString());
-    t1.getItems().add(z);
-    excel_add(z);
+    if (!tf1.getText().equals("")) {
+        z.setCheci(tf1.getText());
+        z.setKaichetime(compare_time.getrealtime(blueDatePicker.getEditor().getText()));
+        z.setXianshitime(compare_time.getrealtime(blueDatePicker1.getEditor().getText()));
+        z.setZhant(zhant_choicebox.getValue().toString());
+        z.setHouche(houche_choicebox.getValue().toString());
+        z.setDibiao(shunhao_yanse.change(shunhao_choicebox.getValue().toString()));
+        z.setShunhao(shunhao_choicebox.getValue().toString());
+        t1.getItems().add(z);
+        excel_add(z);
+    }
     stage.close();
+
 
 
 });
@@ -470,14 +473,36 @@ button.setOnAction(event1 -> {
         jiache.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> jiache.setEffect(colorAdjust_green));
         jiache.addEventHandler(MouseEvent.MOUSE_EXITED,event -> jiache.setEffect(null));
 
+        time.setOnAction(event -> {
+            try {
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd-HH:mm:ss");
+                ExecutorService executorService= Executors.newFixedThreadPool(config.ips.length);
+                for (int i=0;i<config.ips.length;i++) {
+                    final int index=i;
+                    executorService.execute(() -> {
+                        client client = new client(config.ips[index], 12306);
+                        try {
+                            client.start("ttttttttttttttttttttttt#"+ simpleDateFormat.format(new Date()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+                }
+                executorService.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
 
 
 
-       t1.setEditable(true);
-       t3.setEditable(true);
-       t5.setEditable(true);
-       t2.setEditable(true);
-       t4.setEditable(true);
+        t1.setEditable(true);
+        t3.setEditable(true);
+        t5.setEditable(true);
+        t2.setEditable(true);
+        t4.setEditable(true);
         t3_wandianshijian.setCellFactory(TextFieldTableCell.forTableColumn());
         t5_wandianshijian.setCellFactory(TextFieldTableCell.forTableColumn());
         t2_wandian.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -523,10 +548,10 @@ button.setOnAction(event1 -> {
         t2_wandian.setOnEditCommit(event -> {
            int index=t2.getSelectionModel().getFocusedIndex();
            checi w=event.getTableView().getItems().get(index);
-           w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
+           w.setWandianshijian(new wandian_zhuanhuan().change(event.getNewValue()));
            event.getTableView().getItems().set(index,w);
            try {
-               wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+               wExcel_small(w.getchechi(),6,new wandian_zhuanhuan().change( event.getNewValue()));
                t2.getItems().remove(index);
                t3.getItems().add(new wandian(w));
            } catch (Exception e) {
@@ -539,7 +564,7 @@ button.setOnAction(event1 -> {
             w.setWandianshijian(new wandian_zhuanhuan().change( event.getNewValue()));
             event.getTableView().getItems().set(index,w);
             try {
-                wExcel_small(w.getWandianshijian(),6,new wandian_zhuanhuan().change( event.getNewValue()));
+                wExcel_small(w.getchechi(),6,new wandian_zhuanhuan().change( event.getNewValue()));
                 t4.getItems().remove(index);
                 t5.getItems().add(new wandian(w));
             } catch (Exception e) {
@@ -656,104 +681,114 @@ button.setOnAction(event1 -> {
 
 
 
+
+
+        timer_zhukong.schedule(new TimerTask() {
+            @Override
+            public void run() {//自动运行的方法，t2，t3
+            sche_work();
+            }
+        },0,60*1000);
+
+
+
+    }
+
+      private void sche_work(){
+      String path_now=base_path+"\\"+df_year.format(new Date())+".xls";
         File file_now=new File(path_now);
         List<zhongkong> list1=new ArrayList<>();
         List<checi> list2=new ArrayList<>();
         List<wandian> list3=new ArrayList<>();
         List<checi> list4=new ArrayList<>();
         List<wandian> list5=new ArrayList<>();
-
-        timer_zhukong.schedule(new TimerTask() {
-            @Override
-            public void run() {//自动运行的方法，t2，t3
-                if (tag>0){
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                String now=df.format(new Date());
-                list1.clear();
-                list2.clear();
-                list3.clear();
-                list4.clear();
-                list5.clear();
-
-                String[][] data;
-                if(file_now.exists()){
-                    data=new readexcel().result(path_now);
-                }else{
-                    data=new readexcel().result(base_file_path);
-                }
-
-                for (String[] aData : data) {
-                    if (compare_time.comparetime(now, aData[1], aData[6], config.tingjian_time) < 0) {
-                        zhongkong zhongkong = new zhongkong();
-                        zhongkong.setCheci(aData[0]);
-                        zhongkong.setKaichetime(aData[1]);
-                        zhongkong.setXianshitime(aData[2]);
-                        zhongkong.setZhant(aData[3]);
-                        zhongkong.setDibiao(aData[4]);
-                        zhongkong.setShunhao(aData[5]);
-                        zhongkong.setWandiantime(aData[6]);
-                        zhongkong.setQuanneng(aData[7]);
-                        zhongkong.setHouche(aData[9].trim());
-                        if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) == 1) {//1候车厅
-                            if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 0) >= 0 && list2.size() < 4) {
-                                list2.add(new checi(zhongkong));
-                                continue;
-                            } else if (!zhongkong.getWandiantime().equals("")) {
-                                list3.add(new wandian(zhongkong));
-                                continue;
-                            }
-                        }
-                        if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) > 1) {//2候车厅
-                            if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 0) >= 0 && list4.size() < 4) {
-                                list4.add(new checi(zhongkong));
-                                continue;
-
-                            } else if (!zhongkong.getWandiantime().equals("")) {
-                                list5.add(new wandian(zhongkong));
-                                continue;
-                            }
-                        }
-                        list1.add(zhongkong);
-                    }
-                }
-                if (!textarea.getText().equals(data[0][8]))
-                         textarea.setText(data[0][8]);
-                if (list2.size()==0){
-                    list2.add(new checi());
-                }
-                if (list4.size()==0){
-                    list4.add(new checi());
-                }
-                compare_wandian compare_wandian=new compare_wandian();
-                if (!compare_wandian.compare_zhongkong(list1,data1)){
-                    data1.clear();
-                    data1.addAll(list1);
-                }
-                if (!compare_wandian.compare_checi(list2,data2)){
-                    data2.clear();
-                    data2.addAll(list2);
-                }
-                if (!compare_wandian.compare_wandian(list3,data3)){
-                    data3.clear();
-                    data3.addAll(list3);
-                }
-                if (!compare_wandian.compare_checi(list4,data4)){
-                    data4.clear();
-                    data4.addAll(list4);
-                }
-                if (!compare_wandian.compare_wandian(list5,data5)){
-                    data5.clear();
-                    data5.addAll(list5);
-                }
+      //  List<zhongkong> list6=new ArrayList<>();//过去车，暂时先不弄
+        if (tag>0){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        },0,60*1000);
-    }
+        }
+        String now=df.format(new Date());
+        list1.clear();
+        list2.clear();
+        list3.clear();
+        list4.clear();
+        list5.clear();
 
+        String[][] data;
+        if(file_now.exists()){
+            data=new readexcel().result(path_now);
+        }else{
+            data=new readexcel().result(base_file_path);
+        }
+
+        for (String[] aData : data) {
+            zhongkong zhongkong = null;
+            if (compare_time.comparetime(now, aData[1], aData[6], config.tingjian_time) < 0) {
+                zhongkong = new zhongkong();
+                zhongkong.setCheci(aData[0]);
+                zhongkong.setKaichetime(aData[1]);
+                zhongkong.setXianshitime(aData[2]);
+                zhongkong.setZhant(aData[3]);
+                zhongkong.setDibiao(aData[4]);
+                zhongkong.setShunhao(aData[5]);
+                zhongkong.setWandiantime(aData[6]);
+                zhongkong.setQuanneng(aData[7]);
+                zhongkong.setHouche(aData[9].trim());
+                if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) == 1) {//1候车厅
+                    if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 1) >= 0 && list2.size() < 4) {
+                        list2.add(new checi(zhongkong));
+                        continue;
+                    } else if (!zhongkong.getWandiantime().equals("")) {
+                        list3.add(new wandian(zhongkong));
+                        continue;
+                    }
+                }
+                if (!zhongkong.getHouche().isEmpty() && Integer.parseInt(zhongkong.getHouche()) > 1) {//2候车厅
+                    if (compare_time.comparetime(now, zhongkong.getXianshitime(), zhongkong.getWandiantime(), 1) >= 0 && list4.size() < 4) {
+                        list4.add(new checi(zhongkong));
+                        continue;
+
+                    } else if (!zhongkong.getWandiantime().equals("")) {
+                        list5.add(new wandian(zhongkong));
+                        continue;
+                    }
+                }
+                list1.add(zhongkong);
+            }
+        }
+        if (!textarea.getText().equals(data[0][8]))
+            textarea.setText(data[0][8]);
+        if (list2.size()==0){
+            list2.add(new checi());
+        }
+        if (list4.size()==0){
+            list4.add(new checi());
+        }
+        compare_wandian compare_wandian=new compare_wandian();
+        if (!compare_wandian.compare_zhongkong(list1,data1)){
+            data1.clear();
+            data1.addAll(list1);
+        }
+        if (!compare_wandian.compare_checi(list2,data2)){
+            data2.clear();
+            data2.addAll(list2);
+        }
+        if (!compare_wandian.compare_wandian(list3,data3)){
+            data3.clear();
+            data3.addAll(list3);
+        }
+        if (!compare_wandian.compare_checi(list4,data4)){
+            data4.clear();
+            data4.addAll(list4);
+        }
+        if (!compare_wandian.compare_wandian(list5,data5)){
+            data5.clear();
+            data5.addAll(list5);
+        }
+    }
     private final String theQuannneng[]={"a","b","c","d"};
     private void excel_delete(checi c){
         tag=1;
@@ -1020,27 +1055,29 @@ tag=0;
 tag=0;
 
     }
-   private void wExcel_small(String checi,int index,String value) throws Exception{
-        tag=1;
+    private void wExcel_small(String checi,int index,String value) throws Exception{
+       tag=1;
+      // System.out.println(index+"    "+value);
+       //System.out.println(checi);
        File file_now=new File(base_path+"\\"+df_year.format(new Date())+".xls");//写excel路径
        String[][] data;
        if(file_now.exists()){
            data=new readexcel().result(path_now);
        }else{
            data=new readexcel().result(base_file_path);
-           file_now.createNewFile();
+            file_now.createNewFile();
        }
 
        for (int i=0;i<data.length;i++){
            if (data[i][0].equals(checi)){
+            //   System.out.println("here");
                data[i][index]=value;
-
                if (index==5){
                    data[i][4]=shunhao_yanse.change(value);
                }
-
            }
        }
+
 
        HSSFWorkbook workbook=new HSSFWorkbook();
        HSSFSheet sheet=workbook.createSheet("Sheet1");
@@ -1086,9 +1123,11 @@ tag=0;
        FileOutputStream out=new FileOutputStream(file_now);
        workbook.write(out);
        out.close();
+
        tag=0;//读写保护
 
 }
+
 
 
 }

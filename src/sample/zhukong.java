@@ -20,20 +20,29 @@ import static javafx.application.Application.launch;
  */
 public class zhukong extends Application {
     public final static Timer timer_zhukong=new Timer();
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("zhukong.fxml"));
 
         primaryStage.setTitle("信阳车站");
         primaryStage.setScene(new Scene(root, 1200, 600));
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        Task task=new Task() {
             @Override
-            public void handle(WindowEvent event) {
-
-                timer_zhukong.cancel();
-
+            protected Object call() throws Exception {
+                test.server server=new server(12306);
+                server.start();
+                return null;
             }
+        };
+        Thread th=new Thread(task);
+        th.setDaemon(true);
+        th.start();
+
+        primaryStage.setOnCloseRequest(event->{
+
+            timer_zhukong.cancel();
+            th.interrupt();
         });
         primaryStage.show();
     }

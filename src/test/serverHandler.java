@@ -38,7 +38,7 @@ public class serverHandler extends ChannelInboundHandlerAdapter {
                                ftp.ftpLogin();
                                ftp.downfile("base.xls","d:\\showexcel");
                                ftp.ftpLogOut();
-
+                               changetable.movemouse();
 
 //                  try {
 //                      Robot robot=new Robot();
@@ -54,7 +54,6 @@ public class serverHandler extends ChannelInboundHandlerAdapter {
 //                  }
               }else if (messagelist.toString().contains("a")){
                   String[] gettime=messagelist.toString().split("#");
-
                   if (gettime.length==2){
                            String[] thetime=gettime[1].split(",");
                      // System.out.println(gettime[1].split(",")[0]);
@@ -62,18 +61,38 @@ public class serverHandler extends ChannelInboundHandlerAdapter {
                       String month=thetime[5].trim()+thetime[6].trim();
                       String day=thetime[7].trim()+thetime[8].trim();
                       String hour=thetime[10].trim()+thetime[11].trim();
-                      String minute=thetime[13].trim()+thetime[14].replace("]","").trim();
+                      String minute=thetime[13].trim()+thetime[14].trim();
+                      String second=thetime[16].trim()+thetime[17].replace("]","").trim();
                      Runtime runtime=Runtime.getRuntime();
                      runtime.exec("cmd.exe /c date "+year+"-"+month+"-"+day);
-                     runtime.exec("cmd.exe /c time "+hour+":"+minute+":00");
-
-
+                     runtime.exec("cmd.exe /c time "+hour+":"+minute+":"+second);//下发修改的同时修改时间
                   }
                   f1 ftp=new f1(zhukong_ip, 21, "ls", "ls");
                   ftp.ftpLogin();
                   ftp.downfile(df_year.format(new Date())+".xls","d:\\showexcel");
                   ftp.ftpLogOut();
+
+                  changetable.movemouse();//立即刷新
+              }else if (messagelist.toString().contains("t")){
+                  String[] gettime=messagelist.toString().split("#");
+                  if (gettime.length==2){
+                      String[] thetime=gettime[1].split(",");
+                      // System.out.println(gettime[1].split(",")[0]);
+                      String year=thetime[1].trim()+thetime[2].trim()+thetime[3].trim()+thetime[4].trim();
+                      String month=thetime[5].trim()+thetime[6].trim();
+                      String day=thetime[7].trim()+thetime[8].trim();
+                      String hour=thetime[10].trim()+thetime[11].trim();
+                      String minute=thetime[13].trim()+thetime[14].trim();
+                      String second=thetime[16].trim()+thetime[17].replace("]","").trim();
+                      Runtime runtime=Runtime.getRuntime();
+                      runtime.exec("cmd.exe /c date "+year+"-"+month+"-"+day);
+                      runtime.exec("cmd.exe /c time "+hour+":"+minute+":"+second);//修改时间
+                      System.out.println(hour+"   "+minute+"    "+second);
+
+
+                  }
               }
+
           }finally {
               ReferenceCountUtil.release(msg);
           }
